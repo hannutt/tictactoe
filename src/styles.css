@@ -1,0 +1,45 @@
+.square {
+    background-color: #53c9bc;
+    padding: 22px;
+}
+
+.title {
+    text-align: center;
+}
+
+.info {
+    text-align: center;
+}
+
+.board-row {
+    text-align: center;
+}
+
+.info {
+    margin: auto;
+    text-align: center;
+    background-color: #63625c;
+    width:25%;
+}
+
+.blackJack {
+    background-color: yellow;
+}
+
+.player {
+    text-align: left;
+    
+}
+
+.computer {
+    text-align: right;
+}
+.historyBtn {
+    border-radius: 25px;
+    background-color:#afc7ed;
+    padding: 10px;
+    text-decoration: none;
+}
+.res {
+    background-color: #8ebfb3;
+}
