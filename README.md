@@ -4,5 +4,5 @@ The very first version and still under construction.
 Features:
 -Responsive Carousel feature
 -counts x and o clicks and displays them in a chartJS bar graph
--The app counts how much time it took to complete the games to 
--Save gameresult he SQLite 3 -database.
+-The app counts how much time it took to complete the game.
+-Save gameresult to the SQLite 3 -database.

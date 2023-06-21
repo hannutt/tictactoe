@@ -1,7 +1,22 @@
 import React ,{Component} from 'react'
 import {variables} from './Variables.js'
+import { useState } from "react";
+
+
 
 export class GameHistory extends Component {
+     
+    delClick = (idNum)=> {
+        
+        
+        fetch(variables.ApiUrl+'/'+idNum, { method: 'DELETE' })
+        
+    }
+    
+
+    
+   
+    
 
     constructor(props) {
         super(props);
@@ -10,6 +25,7 @@ export class GameHistory extends Component {
             itemsList : []
            
         };
+        
     }
 
    
@@ -24,6 +40,7 @@ export class GameHistory extends Component {
             this.setState({itemsList:item})
         })
     }
+   
 
     componentDidMount() {
         //funktion kutsu
@@ -33,6 +50,7 @@ export class GameHistory extends Component {
 
     
     render() {
+        
         const {
             itemsList
         }=this.state
@@ -43,8 +61,10 @@ export class GameHistory extends Component {
             //map metodilla käydään tulosjoukko läpi ja näytetään se sivulla
             itemsList.map((item) => ( 
             <ol key = { item.ResultId } >
+                ResultID: {item.ResultId}
                 Result time: { item.ResultTime }, 
-                Result: { item.Result }, 
+                Result: { item.Result },
+                <button id="delBtn" onClick={()=>this.delClick(item.ResultId)}>X</button> 
                 </ol>
             ))
         }

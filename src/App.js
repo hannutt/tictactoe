@@ -10,6 +10,8 @@ import './index.css';
 import {BrowserRouter,Route,NavLink,Routes} from 'react-router-dom';
 import {GameHistory} from './gameHistory'
 import { variables } from "./Variables";
+import DiceGame from './Dices.js'
+import CheckBoxes from "./Checkboxes.js"; 
 const INITIAL_COUNT = 0;
 //onSquareclick saadaan Board komponentista
 function Square({ value, onSquareClick }) {
@@ -114,6 +116,7 @@ export default function Board() {
         {/*blackjack komponenttia kutsutaan changecolor komponentissa, joten sitä ei tarvitse
         kutsut tässä*/}
         <ChangeColor/>
+        <DiceGame/>
         
  
       
@@ -355,6 +358,8 @@ function ChangeFont(props)
 
 
 
+
+
 function BlackJack(props) {
   const wins = []
   const titleUnder10 = ['Club','Diamond','Spade','Heart']
@@ -387,9 +392,22 @@ function BlackJack(props) {
 
   var formatDate = dd + '.' + mm + '.' + yyyy;
 
+  function checkCanClick() {
+    if (canClick===true)
+  {
+    setAdd(add+2)
+    setMovesLeft(movesLeft-1)
+  }
+  else if (canClick===false)
+  {
+    setMovesLeft(movesLeft-1)
+    setAdd(add-2)
+  }
+}
+  
   
 
-  if (gameClicks===3)
+  if (movesLeft===0)
   {
     Check()
   }
@@ -401,7 +419,7 @@ function BlackJack(props) {
     if (playerDiff < opponentDiff && add <= result)
   {
    
-    alert('"You win"')
+    //alert('"You win"')
     wins.push(formatDate)
     wins.push('You won')
     
@@ -411,13 +429,13 @@ function BlackJack(props) {
     else if 
     (opponentDiff < playerDiff && opponent <=result)
     {
-      alert('Opponent win')
+      //alert('Opponent win')
       wins.push(formatDate)
       wins.push(' Opponent won')
     }
     else if (add > result || opponent > result)
     {
-      alert('Over 21, reset game!')
+      //alert('Over 21, reset game!')
       wins.push(formatDate)
       wins.push( 'points went over 21')
     }
@@ -454,22 +472,23 @@ function BlackJack(props) {
     
     {/*kahden state muuttujan päivitys onclickillä*/}
     <h3>BlackJack</h3>
- 
-    <h3>Moves left:{movesLeft}</h3>
+    <CheckBoxes movesLeft={movesLeft}/>
+    
   <button onClick={() => { setAdd(add + Math.random() * (14-2)+2); setOpponent(opponent + Math.random()* (14-2)+2);setGameClicks(gameClicks+1);setMovesLeft(movesLeft-1) }}>+</button>
   <button onClick={() => {setAdd(0);setOpponent(0)}}>reset</button>
 
   <button onClick={()=>setGameClicks(3)}>Check result</button>
   {/*pass painikkeen disablointi*/}
   <button id="pass" title="You can use pass only one time per game" disabled={disabled} onClick={() => {setOpponent(opponent + Math.random() * (14-2)+2);setGameClicks(gameClicks+1);setDisabled(true)}}>Pass</button>
-  {/*ehtolause onclick eventissä jos canclick on false, vähennetään statemuuttujasta 2 jos true lisätään 2*/}
-   <button title="You might get +2 or -2 points" onClick={()=>canClick ? setAdd(add+2): setAdd(add-2)}>+/-</button>
+  {/*ehtolause onclick eventissä jos canclick on false, vähennetään statemuuttujasta 2 jos true lisätään 2 onClick={()=>canClick ? setAdd(add+2): setAdd(add-2)}*/}
+   <button title="You might get +2 or -2 points" onClick={checkCanClick}>+/-</button>
 
   {/*<p>card:{cardTitle}</p><br></br>*/}
 
   <p>You: {add}</p>
   <p>Opponent: {opponent}</p>
   <p>Latest game: {wins[0]} {wins[1]}</p>
+  <FillInputs playTime={wins[0]} EndResult={wins[1]}/>
   
   
 
@@ -483,8 +502,9 @@ function BlackJack(props) {
    
   
     <h3>BlackJack</h3>
+    <CheckBoxes movesLeft={movesLeft} setMovesLeft={setMovesLeft}/>
    
-    <h3>Moves left:{movesLeft}</h3>
+    
      {/*kahden state muuttujan päivitys onclickillä*/}
   <button onClick={() => {setAdd(add + Math.floor(Math.random() * (14-2)+2));add <=10 && (setCardTitle(randomTitleUnder)); add > 10 &&(setCardTitle(randomTitleOver)); setOpponent(opponent + Math.floor(Math.random() * (14-2)+2));setGameClicks(gameClicks+1);setMovesLeft(movesLeft-1) }}>+</button>
   <button onClick={() => {setAdd(0);setOpponent(0);setMovesLeft(3)}}>reset</button>
@@ -493,7 +513,7 @@ function BlackJack(props) {
   <button onClick={Check}>Check result</button>*/}
   <button id="pass" title="You can use pass only one time per game" onClick={() => {setOpponent(opponent + Math.floor(Math.random() * 22));setGameClicks(gameClicks+1);setDisabled(true);setMovesLeft(movesLeft-1)}}>Pass</button>
   {/*ehtolause onclick eventissä jos canclick on false, vähennetään statemuuttujasta 2 jos true lisätään 2*/}
-  <button title="You might get +2 or -2 points" onClick={()=>canClick ? setAdd(add+2):setAdd(add-2)}>+/-</button>
+  <button title="You might get +2 or -2 points" onClick={checkCanClick}>+/-</button>
   
   {/*<p>card: {cardTitle}</p>*/}
   <p>Previous: {prevCountRef.current}</p>
