@@ -12,6 +12,8 @@ import {GameHistory} from './gameHistory'
 import { variables } from "./Variables";
 import DiceGame from './Dices.js'
 import CheckBoxes from "./Checkboxes.js"; 
+import FruitGame from "./Fruits.js";
+import Poll from "./Polls.js";
 const INITIAL_COUNT = 0;
 //onSquareclick saadaan Board komponentista
 function Square({ value, onSquareClick }) {
@@ -110,6 +112,7 @@ export default function Board() {
       <h3 className="title">Carousel</h3>
       {/* näytetään clicks statemuuttuja arvo divissä*/}
       <center>
+     
       <Carousel width={450} height={480}>
       
         <HistoryBtn />
@@ -117,12 +120,16 @@ export default function Board() {
         kutsut tässä*/}
         <ChangeColor/>
         <DiceGame/>
+        <FruitGame/>
+        <Poll/>
+      
         
  
       
         
       </Carousel>
       <SeeHistory/>
+     
       
       
      
@@ -139,6 +146,7 @@ export default function Board() {
 
           <div className="Yclicks">O-Clicks:{oClicks}</div>
         </div>
+        
       </center>
       <div className="board-row">
 
@@ -166,16 +174,18 @@ export default function Board() {
         <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
         <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
-
+        
       </div>
-
+      <Statistics amountX={xClicks} />
+      <Statistics amountO={oClicks} />
+      
+      
 
 
 
 
       {/*komponentille annetaan amountx ominaisuus, joka saa arvokseen xClicks statemuuttujan*/}
-      <Statistics amountX={xClicks} />
-      <Statistics amountO={oClicks} />
+     
 
     </>
   );
@@ -255,46 +265,50 @@ function FillInputs (props) {
 //välitetään Statistics komponentille propsin avulla Xlicksin arvo
 function Statistics(props) {
 
-  Chart.register(CategoryScale);
+
+    Chart.register(CategoryScale);
 
 
-  const state = {
-    labels: ['X-Clicks', 'O-Clikcs'],
-    datasets: [
-      {
-        label: 'X and O Clicks',
-        backgroundColor: 'rgba(75,192,192,1)',
-        borderColor: 'rgba(0,0,0,1)',
-        borderWidth: 2,
-        data: [props.amountX, props.amountO],
+const state = {
+  labels: ['X-Clicks', 'O-Clikcs'],
+  datasets: [
+    {
+      label: 'X and O Clicks',
+      backgroundColor: 'rgba(75,192,192,1)',
+      borderColor: 'rgba(0,0,0,1)',
+      borderWidth: 2,
+      data: [props.amountX, props.amountO],
+      
 
-      }
-    ]
-  }
-
-  return (
-    <div>
-      <Bar
-        data={state}
-        width={15}
-        height={5}
-        options={{
-          title: {
-            display: true,
-            text: 'Clicks',
-            fontSize: 10
-          },
-          legend: {
-            display: true,
-            position: 'right',
-
-          }
-        }}
-      />
-    </div>
-  );
+    }
+  ]
 }
 
+return (
+  <div>
+    <Bar
+      data={state}
+      width={15}
+      height={5}
+      options={{
+        title: {
+          display: true,
+          text: 'Clicks',
+          fontSize: 10
+        },
+        legend: {
+          display: true,
+          position: 'right',
+
+        }
+      }}
+    />
+  </div>
+);
+}
+
+
+ 
 
 
 
@@ -529,15 +543,7 @@ function BlackJack(props) {
 }
 }
 
-/*
-function checkGuess(event) {
-  var id = event.target.id;
-  if (id === "1") {
-    alert('you clicked button 1')
-  } else {
-    alert('you clicked button 2')
-  }
-} */
+
 
 //return <button className="stats"onClick={() => stats()}>Statistics</button>;
 

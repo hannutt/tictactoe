@@ -67,3 +67,31 @@
     text-decoration: none;
 
 }
+
+.fruitsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .fruits {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45%;
+    margin: 0 0 1em 0;
+    padding: 1em;
+    border: 1px solid black;
+  }
+
+ .rollright {
+    float: right;
+ }
+
+ .rollLeft {
+    float:left;
+ }
+
+ .rollbtn {
+    text-align: center;
+ }
