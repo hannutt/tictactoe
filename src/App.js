@@ -14,6 +14,7 @@ import DiceGame from './Dices.js'
 import CheckBoxes from "./Checkboxes.js"; 
 import FruitGame from "./Fruits.js";
 import Poll from "./Polls.js";
+import Puzzle from "./WordPuzzle.js"
 const INITIAL_COUNT = 0;
 //onSquareclick saadaan Board komponentista
 function Square({ value, onSquareClick }) {
@@ -121,6 +122,7 @@ export default function Board() {
         <ChangeColor/>
         <DiceGame/>
         <FruitGame/>
+        <Puzzle/>
         <Poll/>
       
         
@@ -176,8 +178,8 @@ export default function Board() {
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
         
       </div>
-      <Statistics amountX={xClicks} />
-      <Statistics amountO={oClicks} />
+      <Statistics amountX={xClicks} amountO={oClicks}/>
+      
       
       
 

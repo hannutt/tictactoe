@@ -95,3 +95,6 @@
  .rollbtn {
     text-align: center;
  }
+ .dropzone {
+    background-color: red;
+ }
