@@ -45,6 +45,10 @@ export default function DiceGame(props) {
     }, [rnd1, rnd2])
 
     const rollDice = () => {
+        //kun funktio suoritetaan haetaan localstoragesta key avaimen  arvo ja tallennetaan se answer
+        //muuttujaan. Näin saadaan fuktiolle tieto, että anytriple vaihtoehto on valittu
+        var answer = localStorage.getItem("key")
+        console.log(answer)
 
 
         var randomNum1 = Math.floor(Math.random() * 6);
@@ -75,6 +79,9 @@ export default function DiceGame(props) {
             setRnd2(dict[randomNum2])
             setRnd3(dict[randomNum3])
         }
+        var num1 =rnd1
+        var num2 = rnd2
+        var num3 = rnd3
         var result = rnd1 + rnd2 + rnd3
 
         if (result > 4 && result <= 10) {
@@ -82,11 +89,27 @@ export default function DiceGame(props) {
             
         }
 
-
+        /*
         else if (result > 10 || rnd1 === 3 || rnd2 === 3 || rnd3 === 3) {
 
                 setMsg(msg="you lose")
 
+        }*/
+      
+
+        else if (answer==='triple' && num1===3)
+        {
+            alert("you got 3")
+        }
+
+        else if (answer==='triple' && num2===3)
+        {
+            alert("you got 3")
+        }
+
+        else if (answer==='triple' && num3===3)
+        {
+            alert("you got 3")
         }
 
         // eslint-disable-next-line no-mixed-operators
@@ -202,11 +225,11 @@ export default function DiceGame(props) {
     }
 
     function Triple(props) {
-        const [anyTriple, setAnyTriple] = useState(false)
-
+        const [anyTriple, setAnyTriple] = useState('')
+        //jos checkbox on valittu tallennetaan localstorageen key nimisen avaimen pariksi merkkijono triple
         const handleTriple = () => {
             setAnyTriple(!anyTriple)
-
+            localStorage.setItem("key","triple")
 
         }
 
@@ -232,6 +255,7 @@ export default function DiceGame(props) {
 
 
     function TripleAnyBtn(props) {
+        
 
 
 
