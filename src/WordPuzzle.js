@@ -6,18 +6,20 @@ const Puzzle = () => {
   
   
     
-    const [puzzle1,setPuzzle1]  =  useState(['A','N',' D'])
+    const [puzzle1,setPuzzle1]  =  useState(['-','-',' -'])
    
    
   
    
     return (
+      
       <>
       {
+        
       puzzle1.map((item) => (  
     
 
-        <button className='square'>{item}</button>  
+        <button className='square' draggable>{item}</button>  
         
 
         
@@ -25,6 +27,8 @@ const Puzzle = () => {
         ))}
         <br/><br/>
         <Letters />
+        
+        
    
       </>
     );
@@ -65,6 +69,14 @@ const Puzzle = () => {
       setList(copyListItems);
       
     };
+    const handleClick = (index) => {
+      const marks = ["/","-","|"]
+      var randomSelect = marks[(Math.floor(Math.random() * marks.length))];
+      const newList = [...list]
+      newList[index] = randomSelect
+      setList(newList)
+    
+    }
    
     return (
       <>
@@ -79,8 +91,10 @@ const Puzzle = () => {
           onDragEnter={(e) => dragEnter(e, index)}
           onDragEnd={drop}
           key={index}
-          draggable>
+          draggable
+          onClick={()=>handleClick(index)}>
             {item}
+          
               
         </button>
         

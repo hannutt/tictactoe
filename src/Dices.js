@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 
 
 //import 'bootstrap/dist/css/bootstrap.min.css'
+
+//ns. pääkomponentti. täältä välitetään mm SetAnytriple state muuttuja triple komponenttiin
 export default function DiceGame(props) {
 
     var diceImages = [dice1, dice2, dice3, dice4, dice5, dice6]
@@ -29,11 +31,12 @@ export default function DiceGame(props) {
     const [dices3, setDices3] = useState(false)
     const [MaxLimit, setMaxLimit] = useState(0)
     const [Minlimit, setMinLimit] = useState(0)
-    var [results, setResults] = useState(0)
+    const [anyTriple, setAnyTriple] = useState(false)
+    const [specficTriple,setSpecficTriple] = useState(false)
+  
 
     var [msg,setMsg] = useState("")
-    const gameres = []
-    var updatedResult = 0
+    
 
 
 
@@ -48,6 +51,7 @@ export default function DiceGame(props) {
         //kun funktio suoritetaan haetaan localstoragesta key avaimen  arvo ja tallennetaan se answer
         //muuttujaan. Näin saadaan fuktiolle tieto, että anytriple vaihtoehto on valittu
         var answer = localStorage.getItem("key")
+        var answer2 = localStorage.getItem("key2")
         console.log(answer)
 
 
@@ -83,6 +87,7 @@ export default function DiceGame(props) {
         var num2 = rnd2
         var num3 = rnd3
         var result = rnd1 + rnd2 + rnd3
+        
 
         if (result > 4 && result <= 10) {
                 setMsg(msg="you won")
@@ -95,6 +100,11 @@ export default function DiceGame(props) {
                 setMsg(msg="you lose")
 
         }*/
+        else if (answer2==="specfic")
+        {
+           
+            alert("you need 3 from all three dices")
+        }
       
 
         else if (answer==='triple' && num1===3)
@@ -111,6 +121,18 @@ export default function DiceGame(props) {
         {
             alert("you got 3")
         }
+        else if (answer === "triple")
+        {
+            setAnyTriple(!anyTriple)
+            
+        }
+
+        else if (specficTriple===true && num1===3 && num2===3&& num3===3 )
+        {
+            alert("you won spefic triple")
+        }
+
+      
 
         // eslint-disable-next-line no-mixed-operators
        
@@ -224,14 +246,26 @@ export default function DiceGame(props) {
 
     }
 
+   
+    
+
     function Triple(props) {
-        const [anyTriple, setAnyTriple] = useState('')
+        
+        //const [anyTriple, setAnyTriple] = useState(false)
+        
+        
         //jos checkbox on valittu tallennetaan localstorageen key nimisen avaimen pariksi merkkijono triple
         const handleTriple = () => {
-            setAnyTriple(!anyTriple)
-            localStorage.setItem("key","triple")
 
+            //setAnyTriple(true)
+            localStorage.setItem("key","triple")
+            setAnyTriple(!anyTriple)
+          
         }
+        const handleSpecfic=() => {
+           // localStorage.setItem("key2","specfic")
+            setSpecficTriple(!specficTriple)
+            }
 
 
         return (
@@ -243,25 +277,32 @@ export default function DiceGame(props) {
                 {/*jos anytriple arvo on true eli checkboksi on valittu, näytetää TripleAnybtn komponetti
             joka sisältää button elementin*/}
                 {anyTriple && <TripleAnyBtn />}
-
+               
+                {specficTriple && <SpecficTripleBtn />}
                 <label htmlFor="triple">Specfic triple</label>
-                <input type="checkbox" id="triple"></input>
+                <input type="checkbox" id="triple" onChange={handleSpecfic}></input>
             </div>
 
         )
     }
 
+
+    function SpecficTripleBtn() {
+        return ( 
+        <div>
+            <button onClick={rollDice}>Roll Specfic Triple</button>
+        </div>
+
+        )
+    }
  
 
 
     function TripleAnyBtn(props) {
-        
-
-
 
         return (
             <div>
-                <button onClick={rollDice}>Roll</button>
+                <button onClick={rollDice}>Roll Any Triple</button>
             </div>
 
 
