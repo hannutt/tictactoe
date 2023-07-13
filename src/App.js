@@ -179,11 +179,6 @@ export default function Board() {
         
       </div>
       <Statistics amountX={xClicks} amountO={oClicks}/>
-      
-      
-      
-
-
 
 
       {/*komponentille annetaan amountx ominaisuus, joka saa arvokseen xClicks statemuuttujan*/}

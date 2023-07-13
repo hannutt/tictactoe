@@ -33,9 +33,13 @@ export default function DiceGame(props) {
     const [Minlimit, setMinLimit] = useState(0)
     const [anyTriple, setAnyTriple] = useState(false)
     const [specficTriple,setSpecficTriple] = useState(false)
-  
-
-    var [msg,setMsg] = useState("")
+    const [winMsg,setWinMsg] = useState(false)
+    const [anytripleWins,setAnyTripleWins] = useState(0)
+    const [specficTripleWins,setSpecficTripleWins] = useState(0)
+    const [extras,setExtras] = useState(false)
+    const [doubles,setDouble] = useState(false)
+    const [doubleWins,setDoubleWins] = useState(0)
+    const [sicBoWins,setSicBoWins] = useState(0)
     
 
 
@@ -44,17 +48,14 @@ export default function DiceGame(props) {
     //näin se näkyy reali-aikaisesti
     useEffect(() => {
         setRes(rnd1 + rnd2)
+        
 
     }, [rnd1, rnd2])
 
     const rollDice = () => {
         //kun funktio suoritetaan haetaan localstoragesta key avaimen  arvo ja tallennetaan se answer
         //muuttujaan. Näin saadaan fuktiolle tieto, että anytriple vaihtoehto on valittu
-        var answer = localStorage.getItem("key")
-        var answer2 = localStorage.getItem("key2")
-        console.log(answer)
-
-
+    
         var randomNum1 = Math.floor(Math.random() * 6);
         var randomNum2 = Math.floor(Math.random() * 6);
         var randomNum3 = Math.floor(Math.random() * 6);
@@ -89,49 +90,36 @@ export default function DiceGame(props) {
         var result = rnd1 + rnd2 + rnd3
         
 
-        if (result > 4 && result <= 10) {
-                setMsg(msg="you won")
+        if (result >= Minlimit && result <= MaxLimit) {
+
+           // console.log(msg)
+          
+            setSicBoWins(sicBoWins+1)
+            setWinMsg(!winMsg)
             
         }
 
         /*
-        else if (result > 10 || rnd1 === 3 || rnd2 === 3 || rnd3 === 3) {
+       else {
 
-                setMsg(msg="you lose")
+        setMsg(msg="you lose")
+       }*/
+       //jos anytriple checkboksi on valittu, anytriple state muuttujan arvo muuttuu silloin trueksi
+       if (anyTriple===true && num1===3 ||anyTriple===true && num2===3 || anyTriple===true && num3===3 ) 
+       {
+        
+        setAnyTripleWins(anytripleWins+1)
+       }
 
-        }*/
-        else if (answer2==="specfic")
-        {
-           
-            alert("you need 3 from all three dices")
-        }
-      
+       if(specficTriple===true && num1===3  && num2===3  && num3===3)
+       {
+        setSpecficTripleWins(specficTripleWins+1)
+       }
 
-        else if (answer==='triple' && num1===3)
-        {
-            alert("you got 3")
-        }
-
-        else if (answer==='triple' && num2===3)
-        {
-            alert("you got 3")
-        }
-
-        else if (answer==='triple' && num3===3)
-        {
-            alert("you got 3")
-        }
-        else if (answer === "triple")
-        {
-            setAnyTriple(!anyTriple)
-            
-        }
-
-        else if (specficTriple===true && num1===3 && num2===3&& num3===3 )
-        {
-            alert("you won spefic triple")
-        }
-
+       if (doubles===true && num1===num2 || doubles===true && num2===num3 || doubles===true && num1===num3)
+       {
+        setDoubleWins(doubleWins+1)
+       }
       
 
         // eslint-disable-next-line no-mixed-operators
@@ -155,13 +143,7 @@ export default function DiceGame(props) {
         </div>
     )
 
-    function DiceResult(props) {
-        return (
-            <div>
-                <p>End result: {props.gameRes}</p>
-            </div>
-        )
-    }
+  
 
     function Dices2Times() {
         return (
@@ -223,7 +205,10 @@ export default function DiceGame(props) {
             }
 
             else {
+                
                 setCbChecked(cbChecked = false)
+                props.setMaxLimit(Minlimit=0)
+                props.setMinLimit(MaxLimit=0)
             }
 
 
@@ -231,19 +216,39 @@ export default function DiceGame(props) {
 
         return (
             <div>
-                <h3>Min: {props.Minlimit} Max: {props.limit} </h3>
-                {/*jos cbchecked on true, eli checkboksi on valittu, näytetään tässä triple komponentti*/}
-              
-
                 <label htmlFor="smallbets">Small Bet</label>
                 <input type="checkbox" id="small" onChange={handleCheckBox}></input>
 
                 <label htmlFor="bigbets">Big Bet</label>
                 <input type="checkbox" id="big" onChange={handleCheckBox}></input>
+                <h3>Min: {props.Minlimit} Max: {props.limit} </h3>        
 
             </div>
         )
 
+    }
+    //diceresult saa parametrina msg-propertyn, joka määritellään rivillä 355
+    function DiceResult({msg}) {
+        if (!msg) return <p>You lose</p>
+        return (
+            <div>
+                <p>You won</p>
+                
+            </div>
+        )
+    }
+
+    function Extras() {
+        const handleExtras = () => {
+            setExtras(!extras)
+        }
+        return (
+            <div>
+                 <label htmlFor="extras">Sic Bo specials</label>
+                <input type="checkbox" id="extras" onChange={handleExtras}></input>
+                {extras && <Triple/>}
+            </div>
+        )
     }
 
    
@@ -251,20 +256,24 @@ export default function DiceGame(props) {
 
     function Triple(props) {
         
-        //const [anyTriple, setAnyTriple] = useState(false)
+      
         
         
-        //jos checkbox on valittu tallennetaan localstorageen key nimisen avaimen pariksi merkkijono triple
+        //jos checkbox on valittu statemuuttuja muuttuu falsesta trueksi
         const handleTriple = () => {
 
             //setAnyTriple(true)
-            localStorage.setItem("key","triple")
+            //statemuuttuja muuttuu falsesta trueksi
             setAnyTriple(!anyTriple)
           
         }
         const handleSpecfic=() => {
            // localStorage.setItem("key2","specfic")
             setSpecficTriple(!specficTriple)
+            }
+        
+            const handleDouble = () => {
+                setDouble(!doubles)
             }
 
 
@@ -279,8 +288,12 @@ export default function DiceGame(props) {
                 {anyTriple && <TripleAnyBtn />}
                
                 {specficTriple && <SpecficTripleBtn />}
+
+                {doubles && <SpecificDoubleBtn />}
                 <label htmlFor="triple">Specfic triple</label>
                 <input type="checkbox" id="triple" onChange={handleSpecfic}></input>
+                <label htmlFor="double">Specfic Double</label>
+                <input type="checkbox" id="double" onChange={handleDouble}></input>
             </div>
 
         )
@@ -290,7 +303,8 @@ export default function DiceGame(props) {
     function SpecficTripleBtn() {
         return ( 
         <div>
-            <button onClick={rollDice}>Roll Specfic Triple</button>
+            <button className="DiceBtn" onClick={rollDice}>Roll Specfic Triple</button>
+            <p>Specific Triples won: {specficTripleWins}</p>          
         </div>
 
         )
@@ -302,17 +316,26 @@ export default function DiceGame(props) {
 
         return (
             <div>
-                <button onClick={rollDice}>Roll Any Triple</button>
+                <button className="DiceBtn" onClick={rollDice}>Roll Any Triple</button>
+                <p>Any triples won: {anytripleWins}</p>
             </div>
-
-
         )
-
-
-
     }
 
+    function SpecificDoubleBtn() {
+        return(
+            <div>
+                <button className="DiceBtn" onClick={rollDice}>Roll Specific Double</button>
+                <p>Specific Double wins: {doubleWins}</p>
+            </div>
+
+        )
+    }
+
+   
+
     function Dices3times(props) {
+        
 
 
         return (
@@ -322,29 +345,32 @@ export default function DiceGame(props) {
                 {/*Bets komponenttia käytetään Dice3Times komponentissa eli käytännössä
                 näytetään bets komponentit checkboksit ja limit+minlimit statemuuttujat
                 limit yms ennen muuttujaa ovat ominaisuuksia joihin talletetaan data*/}
-                <Triple />
+                <Extras/>
+                <br></br>
+               
                 <Bets limit={MaxLimit} setMaxLimit={setMaxLimit} Minlimit={Minlimit} setMinLimit={setMinLimit} />
-
+                <p>You got: {rnd1 + rnd2 + rnd3}</p>
+                <p>Sic Bo wins: {sicBoWins}</p>
+                <p>Times rolled: {timesRolled}</p>
+                {/*välitetään komponentille msg ominaisuus, jonka arvo on statemuuttuja*/}
+                <DiceResult msg={winMsg}/>
+                <button type="button" className="DiceBtn" onClick={rollDice}>Roll</button>
                 <img className="diceSquare" alt="dice" src={image} style={{ background: bgColor }}></img>
                 <div style={{ width: '4px', display: 'inline-block' }} />
                 <img className="diceSquare" alt="dice" src={image2} style={{ background: bgColor }}></img>
                 <div style={{ width: '4px', display: 'inline-block' }} />
                 <img className="diceSquare" alt="dice" src={image3} style={{ background: bgColor }}></img>
-                <p>You got: {rnd1 + rnd2 + rnd3}</p>
-
-                <p>Times rolled: {timesRolled}</p>
+        
+              
                 <p>Pairs: {pairs}</p>
-                <p> Min Limit: {Minlimit}</p>
-                <p> Max Limit: {MaxLimit}</p>
-                <DiceResult gameRes={msg}/>
-
-
-                <button type="button" className="DiceBtn" onClick={rollDice}>Roll</button>
+               
             </div>
         )
 
 
     }
+
+    
 
    
 
